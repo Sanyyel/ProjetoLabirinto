@@ -32,8 +32,5 @@ public class Main extends Coordenada{
             in.close();
         } catch (IOException e) {
         }
-        Coordenada mapa = new Coordenada();
-        char [][] labirinto = new char[0][0];
-        System.out.println(labirinto);
     }
 }
