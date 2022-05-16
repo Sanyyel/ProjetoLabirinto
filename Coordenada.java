@@ -1,32 +1,29 @@
 public class Coordenada {
-    private double x;
-    private double y;
+    private int linha;
+    private int coluna;
 
-    public Coordenada (double xInicial, double yInicial)
-    {
-        x = xInicial;
-        y = yInicial;
+    public int getLinha() {
+        return linha;
     }
 
-    public Coordenada ()
-    {
-        x = 0;
-        y = 0;
+    public void setLinha(int linha) {
+        this.linha = linha;
     }
 
-    public double getX() {
-        return x;
+    public int getColuna() {
+        return coluna;
     }
 
-    public double getY() {
-        return y;
+    public void setColuna(int coluna) {
+        this.coluna = coluna;
     }
 
-    public void setX(double x) {
-        this.x = x;
+    public Coordenada(int l, int c) throws Exception {
+        this.linha = l;
+        this.coluna = c;
     }
 
-    public void setY(double y) {
-        this.y = y;
-    }
+    @Override
+    public String toString() {
+        return "(" + this.linha + "," + this.coluna + ")";
 }
