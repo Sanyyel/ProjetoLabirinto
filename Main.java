@@ -15,3 +15,40 @@ public class Main
         catch(Exception erro){
             System.err.println("Erro: " + erro.getMessage());
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader("C:\\projetos\\untitled\\ProjetoLabirinto\\src\\SemEntrada.txt"));
+            String str = null;
+            while ((str = in.readLine()) != null) {
+                System.out.println(str);
+            }
+            in.close();
+        } catch (IOException e) {
+        }
+
+         */
+
+    }
+
+}
+
