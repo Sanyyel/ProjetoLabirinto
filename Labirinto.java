@@ -19,20 +19,48 @@ public class Labirinto implements Cloneable{
         matrizDoLab(arquivoCopy);
     }
 
-    public void matrizDoLab(Arquivo novoArquivo){
+    public void matrizDoLab(Arquivo novoArquivo) throws Exception{
         try{
             String str = null;
             novoArquivo.getUmInt();
             this.labirinto = new char[this.numLinhas][this.numColunas];
             for(int i=0; i < this.numLinhas;i++){
                 str = novoArquivo.getUmString();
+                // verificar se o tamanho das linhas estão corretos e iguais --> TamanhoDeLinhaErrados.txt
+                if(str.length() != this.numColunas){
+                    throw new Exception("As linhas não tem o mesmo tamanho.");
+                }
                 for(int j=0; j < this.numColunas;j++){
                     this.labirinto[i][j] = str.charAt(j);
                 }
             }
 
-        }catch(Exception erro){
+            // para cima
+            for (int j = 0; j < numColunas; j++) {
+                if (labirinto[0][j] == ' ')
+                    throw new Exception("Sem parede encima.");
+            }
 
+            // para baixo
+            for (int j = 0; j < numColunas; j++) {
+                if (labirinto[numLinhas - 1][j] == ' ')
+                    throw new Exception("Sem parede embaixo.");
+            }
+
+            // para esquerda
+            for (int i = 0; i < numLinhas; i++) {
+                if (labirinto[i][0] == ' ')
+                    throw new Exception("Sem parede à esquerda.");
+            }
+
+            // para direita
+            for (int i = 0; i < numLinhas; i++) {
+                if (labirinto[i][numColunas - 1] == ' ')
+                    throw new Exception("Sem parede à direita.");
+            }
+
+        }catch(Exception erro){
+            throw new Exception(erro);
         }
     }
 
@@ -46,8 +74,13 @@ public class Labirinto implements Cloneable{
         if(!isDuasEntradas()){
             throw new Exception("Há duas entradas.");
         }
+
+        if(!isCharDiff()){
+            throw new Exception("Caracteres não fazem/não devem fazer parte do labirinto.");
+        }
     }
 
+    // verificar se há entrada --> SemEntrada.txt
     public boolean isEntrada(){
         for(int i=0; i < this.numLinhas;i++){
             for(int j=0; j < this.numColunas;j++){
@@ -59,6 +92,7 @@ public class Labirinto implements Cloneable{
         return false;
     }
 
+    // verificar se há saída --> SemSaida.txt
     public boolean isSaida(){
         for(int i=0; i < this.numLinhas;i++){
             for(int j=0; j < this.numColunas;j++){
@@ -70,6 +104,7 @@ public class Labirinto implements Cloneable{
         return false;
     }
 
+    // verificar se há duas entradas --> 2entradas.txt
     public boolean isDuasEntradas(){
         int cont = 0;
         for(int i=0; i < this.numLinhas;i++){
@@ -85,8 +120,31 @@ public class Labirinto implements Cloneable{
         return true;
     }
 
+    // verificar se há duas saídas --> 2saidas.txt
+    public boolean isDuasSaidas(){
+        int cont = 0;
+        for(int i=0; i < this.numLinhas;i++){
+            for(int j=0; j < this.numColunas;j++){
+                if(labirinto[i][j] == 'S') {
+                    cont++;
+                }
+            }
+        }
+        if(cont != 1){
+            return false;
+        }
+        return true;
+    }
+
+    // verificar diferença de char E/S/" " pra outros --> CaracteresEstranhos.txt
     public boolean isCharDiff(){
-        // fazer diferença de char E/S/" " pra outros
+        for(int i=0; i < this.numLinhas;i++) {
+            for (int j = 0; j < this.numColunas; j++) {
+                if(labirinto[i][j] != 'E' || labirinto[i][j] != 'S' || labirinto[i][j] != ' ' || labirinto[i][j] != '#'){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
