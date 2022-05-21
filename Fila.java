@@ -54,6 +54,10 @@ public class Fila <X> implements Cloneable
         return ret;
     }
 
+    public int devolveTamanho(){
+        return this.elemento.length;
+    }
+
     public void guardeUmItem (X x) throws Exception // LIFO
     {
         if (x==null)
