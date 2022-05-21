@@ -54,6 +54,11 @@ public class Pilha <X> implements Cloneable
         return ret;
     }
 
+    public int devolveTamanho(){
+        return this.elemento.length;
+    }
+
+
     public void guardeUmItem (X x) throws Exception // LIFO
     {
         if (x==null)
@@ -111,6 +116,16 @@ public class Pilha <X> implements Cloneable
             return true;
 
         return false;
+    }
+
+    public int temItem(){
+        int cont = 0;
+        for(int i=0; i<=this.elemento.length;i++){
+            if(this.elemento[i] != null){
+                cont++;
+            }
+        }
+        return cont;
     }
 
     public String toString ()
