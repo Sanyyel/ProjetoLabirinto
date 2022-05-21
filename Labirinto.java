@@ -1,3 +1,4 @@
+import java.nio.charset.CoderResult;
 import java.util.*;
 
 public class Labirinto implements Cloneable {
@@ -9,6 +10,7 @@ public class Labirinto implements Cloneable {
     private Fila<Coordenada> fila;
     private Pilha<Coordenada> caminho;
     private Pilha<Fila<Coordenada>> possibilidades;
+    private Pilha<Coordenada> inverso;
 
     public Labirinto(String arquivo) throws Exception {
         Arquivo arquivoLab = new Arquivo(arquivo);
@@ -91,6 +93,16 @@ public class Labirinto implements Cloneable {
                 fila.guardeUmItem(new Coordenada(atual.getLinha()-1, atual.getColuna()));
     }
 
+    private Pilha<Coordenada> ExibirCoords() throws Exception{
+        inverso = new Pilha<Coordenada>();
+        if(caminho.isVazia() == true){
+            throw new Exception("Caminho está vazio.");
+        }
+        for(int i=0; i<=this.caminho.devolveTamanho();i++){
+            inverso = caminho;
+        }
+        return inverso;
+    }
     private void setCaminho(Coordenada pos)
     {
         this.labirinto[pos.getLinha()][pos.getColuna()] = '*';
@@ -110,22 +122,32 @@ public class Labirinto implements Cloneable {
 
     private void preencherCaminho () throws Exception
     {
+        for (int i = 0; i < this.numLinhas; i++) {
+            for (int j = 0; j < this.numColunas; j++) {
+                if (labirinto[i][j] == 'E') {
+                    atual = new Coordenada(i,j);
+                }
+            }
+        }
+
+
+        caminho = new Pilha<Coordenada>();
+        possibilidades = new Pilha<Fila<Coordenada>>();
+
         //Modo progressivo
         for(;;)
         {
             this.procurarAdj();
-
-            while (fila == null)
+            while (fila.isVazia())
             {
                 //Modo Regressivo
                 atual = caminho.recupereUmItem();
                 caminho.removaUmItem();
 
                 this.procurarAdj();
-
                 this.labirinto[atual.getLinha()][atual.getColuna()] = '-';
 
-                if (!possibilidades.recupereUmItem().vazia())
+                if (!possibilidades.recupereUmItem().isVazia())
                     fila.guardeUmItem(possibilidades.recupereUmItem().recupereUmItem());
 
                 possibilidades.removaUmItem();
@@ -147,7 +169,7 @@ public class Labirinto implements Cloneable {
                 return;
         }
     }
-    public void resolverLab() throws Exception {
+    public Pilha<Coordenada> resolverLab() throws Exception {
         if (!isEntrada()) {
             throw new Exception("Labirinto sem entrada.");
         }
@@ -166,6 +188,7 @@ public class Labirinto implements Cloneable {
             throw new Exception ("O labirinto não possui saída válida!");
         this.preencherCaminho();
 
+        return ExibirCoords();
 
     }
 
