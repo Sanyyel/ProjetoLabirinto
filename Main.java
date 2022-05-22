@@ -7,22 +7,31 @@ public class Main
 {
     public static void main(String[] args)
     {
-        Pilha<Coordenada> inverso;
+        Pilha<Coordenada> inverso = new Pilha<>();
         Pilha<Coordenada> caminho = new Pilha<>();
         try {
             System.out.println("Insira aqui o nome do arquivo do labirinto: ");
             String arquivo = Teclado.getUmString();
             Labirinto labirinto = new Labirinto(arquivo);
-            inverso = labirinto.resolverLab();
+            caminho = labirinto.resolverLab();
             System.out.println(labirinto);
             try {
-                for (int i = 0; i <= inverso.devolveTamanho(); i++){
+
+                while (!caminho.isVazia()){
+                    inverso.guardeUmItem(caminho.recupereUmItem());
+                    caminho.removaUmItem();
+                }
+
+                while (!inverso.isVazia()){
                     System.out.println(inverso.recupereUmItem());
                     inverso.removaUmItem();
                 }
+
+                System.out.println("\n");
+                System.out.println("Labirinto concluído!");
             }
             catch(Exception erro){
-
+                System.err.println("Erro: " + erro.getMessage());
             }
         }
         catch(Exception erro){
