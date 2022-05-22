@@ -76,36 +76,50 @@ public class Labirinto implements Cloneable {
     {
         fila = new Fila<Coordenada> ();
 
-        if (atual.getColuna()+1 < this.numColunas)
-            if (this.labirinto[atual.getLinha()][atual.getColuna()+1] == ' '  || this.labirinto[atual.getLinha()][atual.getColuna()+1] == 'S')
-                fila.guardeUmItem(new Coordenada(atual.getLinha(), atual.getColuna()+1));
+            // direita
+        if (atual.getColuna()+1 < this.numColunas) {
+            if (this.labirinto[atual.getLinha()][atual.getColuna() + 1] == ' ' || this.labirinto[atual.getLinha()][atual.getColuna() + 1] == 'S') {
+                fila.guardeUmItem(new Coordenada(atual.getLinha(), atual.getColuna() + 1));
+            }
+        }
 
-        if (atual.getColuna()-1 >= 0)
-            if (this.labirinto[atual.getLinha()][atual.getColuna()-1] == ' '  || this.labirinto[atual.getLinha()][atual.getColuna()-1] == 'S')
-                fila.guardeUmItem(new Coordenada(atual.getLinha(), atual.getColuna()-1));
+            // esquerda
+        if (atual.getColuna()-1 >= 0) {
+            if (this.labirinto[atual.getLinha()][atual.getColuna() - 1] == ' ' || this.labirinto[atual.getLinha()][atual.getColuna() - 1] == 'S') {
+                fila.guardeUmItem(new Coordenada(atual.getLinha(), atual.getColuna() - 1));
+            }
+        }
 
-        if (atual.getLinha()+1 < this.numLinhas)
-            if (this.labirinto[atual.getLinha()+1][atual.getColuna()] == ' '  || this.labirinto[atual.getLinha()+1][atual.getColuna()] == 'S')
-                fila.guardeUmItem(new Coordenada(atual.getLinha()+1, atual.getColuna()));
+            // baixo
+        if (atual.getLinha()+1 < this.numLinhas) {
+            if (this.labirinto[atual.getLinha() + 1][atual.getColuna()] == ' ' || this.labirinto[atual.getLinha() + 1][atual.getColuna()] == 'S') {
+                fila.guardeUmItem(new Coordenada(atual.getLinha() + 1, atual.getColuna()));
+            }
+        }
 
-        if (atual.getLinha()-1 >= 0)
-            if (this.labirinto[atual.getLinha()-1][atual.getColuna()] == ' ' || this.labirinto[atual.getLinha()-1][atual.getColuna()] == 'S')
-                fila.guardeUmItem(new Coordenada(atual.getLinha()-1, atual.getColuna()));
+            // cima
+        if (atual.getLinha()-1 >= 0) {
+            if (this.labirinto[atual.getLinha() - 1][atual.getColuna()] == ' ' || this.labirinto[atual.getLinha() - 1][atual.getColuna()] == 'S') {
+                fila.guardeUmItem(new Coordenada(atual.getLinha() - 1, atual.getColuna()));
+            }
+        }
     }
 
     private Pilha<Coordenada> ExibirCoords() throws Exception{
-        inverso = new Pilha<Coordenada>();
         if(caminho.isVazia() == true){
             throw new Exception("Caminho está vazio.");
         }
-        for(int i=0; i<=this.caminho.devolveTamanho();i++){
-            inverso = caminho;
-        }
-        return inverso;
+
+        return caminho;
     }
+
     private void setCaminho(Coordenada pos)
     {
         this.labirinto[pos.getLinha()][pos.getColuna()] = '*';
+    }
+
+    private void limparCaminho(Coordenada pos){
+        this.labirinto[pos.getLinha()][pos.getColuna()] = ' ';
     }
 
     private boolean procuraSaida() throws Exception
@@ -130,7 +144,6 @@ public class Labirinto implements Cloneable {
             }
         }
 
-
         caminho = new Pilha<Coordenada>();
         possibilidades = new Pilha<Fila<Coordenada>>();
 
@@ -144,12 +157,11 @@ public class Labirinto implements Cloneable {
                 atual = caminho.recupereUmItem();
                 caminho.removaUmItem();
 
-                this.procurarAdj();
-                this.labirinto[atual.getLinha()][atual.getColuna()] = '-';
+                if (labirinto[atual.getLinha()][atual.getColuna()] == '*') {
+                    this.limparCaminho(atual);
+                }
 
-                if (!possibilidades.recupereUmItem().isVazia())
-                    fila.guardeUmItem(possibilidades.recupereUmItem().recupereUmItem());
-
+                fila = possibilidades.recupereUmItem();
                 possibilidades.removaUmItem();
             }
 
@@ -157,7 +169,7 @@ public class Labirinto implements Cloneable {
                 throw new Exception ("Não existe solução para este labirinto !");
 
             atual = fila.recupereUmItem();
-            fila.recupereUmItem();
+            fila.removaUmItem();
 
             if (labirinto[atual.getLinha()][atual.getColuna()] == ' ')
                 this.setCaminho(atual);
@@ -180,7 +192,11 @@ public class Labirinto implements Cloneable {
             throw new Exception("Há duas entradas.");
         }
 
-        if (!isCharDiff()) {
+        if (!isDuasSaidas()) {
+            throw new Exception("Há duas saidas.");
+        }
+
+        if (isCharDiff()) {
             throw new Exception("Caracteres não fazem/não devem fazer parte do labirinto.");
         }
 
@@ -253,7 +269,7 @@ public class Labirinto implements Cloneable {
     public boolean isCharDiff() {
         for (int i = 0; i < this.numLinhas; i++) {
             for (int j = 0; j < this.numColunas; j++) {
-                if (labirinto[i][j] != 'E' || labirinto[i][j] != 'S' || labirinto[i][j] != ' ' || labirinto[i][j] != '#') {
+                if (" ES#".indexOf(Character.toString(this.labirinto[i][j])) == -1){
                     return true;
                 }
             }
@@ -284,4 +300,5 @@ public class Labirinto implements Cloneable {
         }
         return str;
     }
+    
 }
